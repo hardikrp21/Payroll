@@ -1,0 +1,198 @@
+public string listFilter = null;
+
+protected void Page_Load(object sender, EventArgs e)
+{
+    listFilter = BindName();
+}
+
+private string BindName()
+{
+    try
+    {
+        SqlConnection con = new SqlConnection(@"Data Source=172.16.10.170;Initial Catalog=cbtsv;User ID=cbtsv;Password=cbtsvpass;");
+        con.Open();
+        DataTable ds = new DataTable();
+        using (SqlCommand cmd = con.CreateCommand())
+        {
+            SqlCommand com = new SqlCommand("select SearchKey from DTAirportCity where SearchKey like '%TextBox1.Text%'", con);
+            SqlDataAdapter sda = new SqlDataAdapter(com);
+
+            sda.Fill(ds);
+
+        }
+
+        StringBuilder output = new StringBuilder();
+        output.Append("[");
+        for (int i = 0; i < ds.Rows.Count; ++i)
+        {
+            output.Append("\"" + ds.Rows[i]["SearchKey"].ToString() + "\"");
+
+            if (i != (ds.Rows.Count - 1))
+            {
+                output.Append(",");
+            }
+        }
+        output.Append("];");
+
+        return output.ToString();
+        con.Close();
+    }
+    catch (Exception)
+    {
+
+        throw;
+    }
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head runat="server">
+ <script src="Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+ <script src="Scripts/jquery-1.4.1.js" type="text/javascript"></script>
+ <script src="Scripts/jquery-1.4.1-vsdoc.js" type="text/javascript"></script>
+ <title></title>
+ <script type="text/javascript">
+     function LoadList() {
+         var dt=null;
+     dt = <%=listFilter %>
+    }
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+
+ <asp:TextBox ID="TextBox1" runat="server" OnLoad="LoadList()"></asp:TextBox>    
+    <br />
+
+</div>
+</form>
+
+//getdate jsp auto
+<%@page contentType="text/html" pageEncoding="UTF-8" import="ewa.dbConnect,ewa.sendEmail,ewa.pwGen,ewa.hashPw,java.sql.*" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+        <script src="js/jquery.autocomplete.js"></script>
+        <script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <input type="text" id="search" name="search"/>
+        <script>
+        $("#search").autocomplete("getdata.jsp");
+    </script>
+    </body>
+</html>
+
+//dao
+
+%@page contentType="text/html" pageEncoding="UTF-8" import="ewa.dbConnect,java.sql.*" %>
+<%! dbConnect db = new dbConnect(); %>
+<%
+String query = request.getParameter("q");
+db.connect();
+Statement stmt = db.getConnection().createStatement();
+ResultSet rs = stmt.executeQuery("SELECT username FROM created_accounts WHERE username LIKE "+query);
+while(rs.next())
+{
+    out.println(rs.getString("username"));
+}
+db.disconnect
+%>
+
+
+
+
+//dao auto list.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*"%>
+<%@page import="java.util.*"%>
+ 
+   <%
+   try{
+     String s[]=null;
+ 
+     Class.forName("oracle.jdbc.driver.OracleDriver");
+     Connection con =DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","admin");
+     Statement st=con.createStatement();
+     ResultSet rs = st.executeQuery("select * from countries");
+ 
+       List li = new ArrayList();
+ 
+       while(rs.next())
+       {
+           li.add(rs.getString(1));
+       }
+ 
+       String[] str = new String[li.size()];
+       Iterator it = li.iterator();
+ 
+       int i = 0;
+       while(it.hasNext())
+       {
+           String p = (String)it.next();
+           str[i] = p;
+           i++;
+       }
+ 
+    //jQuery related start
+       String query = (String)request.getParameter("q");
+ 
+       int cnt=1;
+       for(int j=0;j<str.length;j++)
+       {
+           if(str[j].toUpperCase().startsWith(query.toUpperCase()))
+           {
+              out.print(str[j]+"\n");
+              if(cnt>=5)// 5=How many results have to show while we are typing(auto suggestions)
+              break;
+              cnt++;
+            }
+       }
+    //jQuery related end
+ 
+rs.close();
+st.close();
+con.close();
+ 
+}
+catch(Exception e){
+e.printStackTrace();
+}
+ 
+//www.java4s.com
+%>
+
+
+//jsp from auto index.jsp
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
+<script src="JS/jquery.autocomplete.js"></script>
+<script>
+jQuery(function(){
+$("#country").autocomplete("list.jsp");
+});
+</script>
+ 
+</head>
+<body>
+<br><br><center>
+<font face="verdana" size="2">
+<font size="4">Java(jsp)/jQuery Autocompleter Example ::: <font color="#809e02">Java4s.com</font></font>
+<br><br><br><br>
+ 
+Select Country   :
+<input type="text" id="country" name="country"/>
+ 
+</font>
+</body>
+</html>

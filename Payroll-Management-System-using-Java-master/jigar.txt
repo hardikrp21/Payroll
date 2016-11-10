@@ -1,0 +1,99 @@
+if (session.getAttribute("_reportBean") == null) {
+            _bean = new ReportBean();
+            session.setAttribute("_reportBean", _bean);
+        }
+        _bean = (ReportBean) session.getAttribute("_reportBean");
+
+if (request.getParameter("redirected") == null) {
+            response.sendRedirect("../../AccountingYearController?button=get_accounting_year_table");
+        } else {
+            AccountBean _bean = (AccountBean) session.getAttribute("_accountBean");
+
+
+
+
+down vote
+accepted
+If you have a select element that looks like this:
+
+<select id="ddlViewBy">
+<option value="1">test1</option>
+<option value="2" selected="selected">test2</option>
+<option value="3">test3</option>
+</select>
+Running this code:
+
+var e = document.getElementById("ddlViewBy");
+var strUser = e.options[e.selectedIndex].value;
+Would make strUser be 2. If what you actually want is test2, then do this:
+
+var e = document.getElementById("ddlViewBy");
+var strUser = e.options[e.selectedIndex].text;
+
+
+
+
+
+<script>
+function test(a) {
+var x = a.selectedIndex;
+alert(x);
+}
+</script>
+<select onchange="test(this)" id="select_id">
+            <option value="0">-Select-</option>
+            <option value="1">Communication</option>
+            <option value="2">Communication</option>
+            <option value="3">Communication</option>
+</select>
+
+<%
+    if(request.getParameter("redirected")==null)
+        {
+        response.sendRedirect("CompanyMasterServlet?button=data");
+
+
+    }
+    else
+        {
+        CompanyMasterVo _bean=(CompanyMasterVo)session.getAttribute("_bean");
+            System.out.println("arr::"+_bean.getList_arr());
+        boolean up=false;
+        ArrayList data = _bean.getList_arr();
+        ArrayList d1 = (ArrayList) data.get(0);
+        String button="";
+        //if(request.getParameter("button")!=null)
+           // {
+            button=request.getParameter("button");
+
+            
+                /*if(request.getParameter("redirected").equals("true") && button.equals("update_get_data"))
+              {
+                    up=true;
+                    button="Update";
+
+               }
+            else
+                {*/
+                button="Submit";
+            //}
+                
+            
+           // }
+            
+
+    %>
+date time
+
+$('#timepicker').timepicker({
+    hourText: 'Heures',
+    minuteText: 'Minutes',
+    amPmText: ['AM', 'PM'],
+    timeSeparator: 'h',
+    nowButtonText: 'Maintenant',
+    showNowButton: true,
+    closeButtonText: 'Fermer',
+    showCloseButton: true,
+    deselectButtonText: 'Désélectionner',
+    showDeselectButton: true
+});

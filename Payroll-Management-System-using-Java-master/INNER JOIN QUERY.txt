@@ -1,0 +1,39 @@
+pay period employee schedule
+SELECT `pay_period_employees_schedule`.`pay_period_employee_schedule_id`,`pay_period_schedule`.`pay_period_schedule_name`,`employee_master`.`employee_first_name`  FROM `pay_period_employees_schedule` INNER JOIN `pay_period_schedule` ON `pay_period_employees_schedule`.`pay_period_schedule_id`=`pay_period_schedule`.`pay_period_schedule_id` INNER JOIN `employee_master` ON `pay_period_employees_schedule`.`employee_id`=`employee_master`.`employee_id`
+
+reccuring schedule employee details
+
+SELECT `reccuring_schedule_employees_details`.`reccuring_schedule_employees_details_id`,`reccuring_schedule_template`.`reccuring_schedule_name`,`reccuring_schedule_master`.`reccuring_schedule_name`,`employee_master`.`employee_first_name`  FROM `reccuring_schedule_employees_details` INNER JOIN `reccuring_schedule_template` ON `reccuring_schedule_employees_details`.`reccuring_schedule_template_id`=`reccuring_schedule_template`.`reccuring_schedule_template_id` INNER JOIN `reccuring_schedule_master` ON `reccuring_schedule_employees_details`.`reccuring_schedule_id`=`reccuring_schedule_master`.`reccuring_schedule_id` INNER JOIN `employee_master` ON `reccuring_schedule_employees_details`.`employee_id`=`employee_master`.`employee_id`
+
+reccuring_schedule_template
+
+SELECT `recc`.`reccuring_schedule_template_id`,`recc`.`reccuring_schedule_name`,`recc`.`reccuring_schedule_desc`,`recc`.`reccuring_schedule_week`,`recc`.`sun`,`recc`.`mon`,`recc`.`tue`,`recc`.`wed`,`recc`.`thu`,`recc`.`fri`,`recc`.`sat`,`recc`.`start_time`,`recc`.`end_time` ,`schedule_policy_master`.`schedule_policy_name`,`department`.`department_name` FROM `reccuring_schedule_template` AS recc INNER JOIN `schedule_policy_master` ON `recc`.`schedule_policy_id`=`schedule_policy_master`.`schedule_policy_id` INNER JOIN `department` ON `recc`.`department_id`=`department`.`department_id`
+
+
+schedule_policy_master
+
+SELECT `schedule_policy_master`.`schedule_policy_id`,`schedule_policy_master`.`schedule_policy_name`,`meal_policy`.`meal_policy_name`,`break_policy`.`break_name` FROM `schedule_policy_master` INNER JOIN `meal_policy` ON `schedule_policy_master`.`mealpolicy_id`=`meal_policy`.`mealpolicy_id` INNER JOIN `break_policy` ON `schedule_policy_master`.`break_policy_id`=`break_policy`.`break_policy_id`
+
+
+
+absence_policy
+
+SELECT `absence_policy`.`absence_policy_id`,`absence_policy`.`absence_policy_name`,`absence_policy`.`absence_policy_type`,`absence_policy`.`total_amount`,`pay_stub_account`.`pay_stub_account_id` FROM `absence_policy` INNER JOIN `pay_stub_account` ON `absence_policy`.`pay_stub_account_id`=`pay_stub_account`.`pay_stub_account_id`
+
+
+holiday_policy_master`
+
+SELECT `holiday_policy_master`.`holiday_policy_id`,`holiday_policy_master`.`holiday_master_name`,`holiday_policy_master`.`minimun_employed_days`,`holiday_policy_master`.`holiday_time`,`absence_policy`.`absence_policy_name` FROM `holiday_policy_master` INNER JOIN `absence_policy` ON `holiday_policy_master`.`absence_policy_id`=`absence_policy`.`absence_policy_id`
+
+
+
+mass_punch_schedule_details
+
+SELECT `mass_punch_schedule_details`.`mass_punch_schedule_details_id`,`mass_punch_schedule_master`.`mass_punch_schedule_name`,`employee_master`.`employee_first_name` FROM `mass_punch_schedule_details` INNER JOIN `mass_punch_schedule_master` ON `mass_punch_schedule_details`.`mass_punch_schedule_id`=`mass_punch_schedule_master`.`mass_punch_schedule_id` INNER JOIN `employee_master` ON `mass_punch_schedule_details`.`employees_id`=`employee_master`.`employee_id`
+
+
+
+
+mass_punch_schedule_master
+
+SELECT `mass_punch_schedule_master`.`mass_punch_schedule_id`,`mass_punch_schedule_master`.`mass_punch_schedule_name`,`mass_punch_schedule_master`.`mass_punch_schedule_in_time`,`mass_punch_schedule_master`.`mass_punch_schedule_out_time`,`schedule_policy_master`.`schedule_policy_name`,`department`.`department_name` FROM `mass_punch_schedule_master` INNER JOIN `schedule_policy_master` ON `mass_punch_schedule_master`.`schedule_policy_id`=`schedule_policy_master`.`schedule_policy_id` INNER JOIN `department` ON `mass_punch_schedule_master`.`department_id`=`department`.`department_id`

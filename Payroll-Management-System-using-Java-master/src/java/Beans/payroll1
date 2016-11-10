@@ -1,0 +1,624 @@
+/*
+SQLyog Ultimate v9.02 
+MySQL - 6.0.5-alpha-community : Database - payroll
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`payroll` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+
+USE `payroll`;
+
+/*Table structure for table `absence_policy` */
+
+DROP TABLE IF EXISTS `absence_policy`;
+
+CREATE TABLE `absence_policy` (
+  `absence_policy_id` int(10) NOT NULL AUTO_INCREMENT,
+  `absence_policy_type` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `total_amount` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_stub_account_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`absence_policy_id`),
+  KEY `FK_absence_policy` (`pay_stub_account_id`),
+  CONSTRAINT `FK_absence_policy` FOREIGN KEY (`pay_stub_account_id`) REFERENCES `pay_stub_account` (`pay_stub_account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `absence_policy` */
+
+/*Table structure for table `break_policy` */
+
+DROP TABLE IF EXISTS `break_policy`;
+
+CREATE TABLE `break_policy` (
+  `break_policy_id` int(10) NOT NULL AUTO_INCREMENT,
+  `break_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `active_after` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `deduction_addition_time` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `minimum_punch_time` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `maximum_punch_time` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`break_policy_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `break_policy` */
+
+insert  into `break_policy`(`break_policy_id`,`break_name`,`active_after`,`deduction_addition_time`,`minimum_punch_time`,`maximum_punch_time`) values (3,'hkj','4','5','null','null'),(4,'gfbg','9','8','null','null'),(7,'fdsd','sdfssf','','null','null'),(8,'hgfh','gfd','gfhdfhf','null','null'),(24,'hgjh','gjhjgj','jghjgh','null','null');
+
+/*Table structure for table `break_policy_group` */
+
+DROP TABLE IF EXISTS `break_policy_group`;
+
+CREATE TABLE `break_policy_group` (
+  `break_policy_group_id` int(10) NOT NULL AUTO_INCREMENT,
+  `break_policy_id` int(10) DEFAULT NULL,
+  `policy_group_master_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`break_policy_group_id`),
+  KEY `FK_break_policy_group_breakpolicy` (`break_policy_id`),
+  KEY `FK_break_policy_group_policygroup` (`policy_group_master_id`),
+  CONSTRAINT `FK_break_policy_group_policygroup` FOREIGN KEY (`policy_group_master_id`) REFERENCES `policy_group` (`policy_group_master_id`),
+  CONSTRAINT `FK_break_policy_group_breakpolicy` FOREIGN KEY (`break_policy_id`) REFERENCES `break_policy` (`break_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `break_policy_group` */
+
+/*Table structure for table `company_master` */
+
+DROP TABLE IF EXISTS `company_master`;
+
+CREATE TABLE `company_master` (
+  `company_id` int(10) NOT NULL AUTO_INCREMENT,
+  `company_full_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_short_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_address` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_city` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_state` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_country` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_zip_code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_phone_no` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_fax_no` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`company_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `company_master` */
+
+insert  into `company_master`(`company_id`,`company_full_name`,`company_short_name`,`company_address`,`company_city`,`company_state`,`company_country`,`company_zip_code`,`company_phone_no`,`company_fax_no`) values (22,'abc','dhkd','null','3','3','3','355','365','null'),(26,'jigar121','gjssgjk','null','3','3','3','','566',''),(27,'dasbg','bhkhkbh','null','3','3','3','','4646',''),(28,'jigar121','tyyty','null','3','3','3','','255',''),(29,'null','null','null','null','null','null','null','null','null'),(30,'jaghfghk','jasgh','null','3','3','3','','457758',''),(31,'sdgjkjkg','gjks','null','3','3','3','','12146',''),(32,'hj','hjg','null','3','3','3','','123',''),(33,'khjk','jhkk','null','3','3','3','','566',''),(34,'khjk','jhkk','null','3','3','3','','566',''),(35,'jigar121','k','null','3','3','3','','667',''),(36,'ghsduihui','sgudhui','null','1','3','1','','4534',''),(37,'jigar','hjffjfhjh','null','3','3','3','','47',''),(38,'fdhhsf','sdfhjkhdf','null','3','3','3','','65',''),(39,'bfd','tyyty','null','3','3','3','454','454','4545');
+
+/*Table structure for table `department` */
+
+DROP TABLE IF EXISTS `department`;
+
+CREATE TABLE `department` (
+  `department_id` int(10) NOT NULL AUTO_INCREMENT,
+  `department_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `department_status` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'Deactive',
+  PRIMARY KEY (`department_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `department` */
+
+insert  into `department`(`department_id`,`department_name`,`department_status`) values (2,'nullsd','active'),(3,'jigar','deactive'),(4,'jigar','Deactive'),(5,'gjfjh','Active'),(6,'jigar1221','Deactive');
+
+/*Table structure for table `employee_leave_details` */
+
+DROP TABLE IF EXISTS `employee_leave_details`;
+
+CREATE TABLE `employee_leave_details` (
+  `emp_leave_id` int(10) NOT NULL AUTO_INCREMENT,
+  `employee_id` int(10) DEFAULT NULL,
+  `leave_type` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `total_leave` int(10) DEFAULT NULL,
+  `leave_date` date DEFAULT NULL,
+  PRIMARY KEY (`emp_leave_id`),
+  KEY `FK_employee_leave_details_employeemaster` (`employee_id`),
+  CONSTRAINT `FK_employee_leave_details_employeemaster` FOREIGN KEY (`employee_id`) REFERENCES `employee_master` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `employee_leave_details` */
+
+/*Table structure for table `employee_master` */
+
+DROP TABLE IF EXISTS `employee_master`;
+
+CREATE TABLE `employee_master` (
+  `employee_id` int(10) NOT NULL AUTO_INCREMENT,
+  `employee_first_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_middle_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_last_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_sex` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_address` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_city` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_state` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_country` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_zip_code` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_work_phone` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_home_phone` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_mobile_phone` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_fax_no` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_email_id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employee_birth_date` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`employee_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `employee_master` */
+
+insert  into `employee_master`(`employee_id`,`employee_first_name`,`employee_middle_name`,`employee_last_name`,`employee_sex`,`employee_address`,`employee_city`,`employee_state`,`employee_country`,`employee_zip_code`,`employee_work_phone`,`employee_home_phone`,`employee_mobile_phone`,`employee_fax_no`,`employee_email_id`,`employee_birth_date`) values (19,'chirag','b','null','male','','2','2','2','689588','999','82777','16','144','c@gmail.com','23/06/1992'),(20,'chirag','b','butani','male','','1','','','689588','999','82777','16','144','c@gmail.com','23/06/1992'),(21,'chirag','fhf','fhf','on','fhf','3','1','1','2121','213','231','2365','35566','abc@gmail.com','2007-01-26'),(22,'uygj','hjh','jkjhk','on','','2','1','2','421','212','1212','1212','121','564@gmail.com','2007-01-12'),(23,'ujyk','jkhj','jkhjk','on','','2','1','2','4555','454','54','454','4545','564@gmail.com','2007-01-12'),(24,'hjg','vasani','butani','on','','2','1','2','382350','9537882626','9537882626','9537882626','144','vasanijigar@gmail.com','2007-01-05');
+
+/*Table structure for table `employee_tax_deduction` */
+
+DROP TABLE IF EXISTS `employee_tax_deduction`;
+
+CREATE TABLE `employee_tax_deduction` (
+  `employee_tax_deduction_id` int(10) NOT NULL AUTO_INCREMENT,
+  `employee_id` int(10) DEFAULT NULL,
+  `tax_deduction_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`employee_tax_deduction_id`),
+  KEY `FK_employee_tax_deduction_employeemaster` (`employee_id`),
+  KEY `FK_employee_tax_deduction_taxdeduction` (`tax_deduction_id`),
+  CONSTRAINT `FK_employee_tax_deduction_taxdeduction` FOREIGN KEY (`tax_deduction_id`) REFERENCES `tax_deduction` (`tax_deduction_id`),
+  CONSTRAINT `FK_employee_tax_deduction_employeemaster` FOREIGN KEY (`employee_id`) REFERENCES `employee_master` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `employee_tax_deduction` */
+
+/*Table structure for table `exception_policy` */
+
+DROP TABLE IF EXISTS `exception_policy`;
+
+CREATE TABLE `exception_policy` (
+  `exception_policy_id` int(10) NOT NULL AUTO_INCREMENT,
+  `exception_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `exception_code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `severity` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `grace_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `watch_window` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `active_status` varchar(1) COLLATE utf8_unicode_ci DEFAULT '0',
+  PRIMARY KEY (`exception_policy_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `exception_policy` */
+
+insert  into `exception_policy`(`exception_policy_id`,`exception_name`,`exception_code`,`severity`,`grace_time`,`watch_window`,`active_status`) values (2,'dghjkh','55545g','dsgsg','sg','455','1'),(3,'sgd','4545','sg','455','sdg','4');
+
+/*Table structure for table `exception_policy_group` */
+
+DROP TABLE IF EXISTS `exception_policy_group`;
+
+CREATE TABLE `exception_policy_group` (
+  `exception_policy_group_id` int(10) NOT NULL AUTO_INCREMENT,
+  `exception_policy_id` int(10) DEFAULT NULL,
+  `policy_group_master_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`exception_policy_group_id`),
+  KEY `FK_exception_policy_group_exceptionpolicy` (`exception_policy_id`),
+  KEY `FK_exception_policy_group_policygroup` (`policy_group_master_id`),
+  CONSTRAINT `FK_exception_policy_group_policygroup` FOREIGN KEY (`policy_group_master_id`) REFERENCES `policy_group` (`policy_group_master_id`),
+  CONSTRAINT `FK_exception_policy_group_exceptionpolicy` FOREIGN KEY (`exception_policy_id`) REFERENCES `exception_policy` (`exception_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `exception_policy_group` */
+
+/*Table structure for table `holiday_policy_details` */
+
+DROP TABLE IF EXISTS `holiday_policy_details`;
+
+CREATE TABLE `holiday_policy_details` (
+  `holiday_policy_details_id` int(10) NOT NULL AUTO_INCREMENT,
+  `holiday_policy_id` int(10) DEFAULT NULL,
+  `recurring_holiday_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`holiday_policy_details_id`),
+  KEY `FK_holiday_policy_details_holidaypolicy` (`holiday_policy_id`),
+  KEY `FK_holiday_policy_details_reccuringholiday` (`recurring_holiday_id`),
+  CONSTRAINT `FK_holiday_policy_details_reccuringholiday` FOREIGN KEY (`recurring_holiday_id`) REFERENCES `recurring_holiday` (`recurring_holiday_id`),
+  CONSTRAINT `FK_holiday_policy_details_holidaypolicy` FOREIGN KEY (`holiday_policy_id`) REFERENCES `holiday_policy_master` (`holiday_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `holiday_policy_details` */
+
+/*Table structure for table `holiday_policy_group` */
+
+DROP TABLE IF EXISTS `holiday_policy_group`;
+
+CREATE TABLE `holiday_policy_group` (
+  `holiday_policy_group_id` int(10) NOT NULL AUTO_INCREMENT,
+  `holiday_policy_id` int(10) DEFAULT NULL,
+  `policy_group_master_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`holiday_policy_group_id`),
+  KEY `FK_holiday_policy_group_holidaymaster` (`holiday_policy_id`),
+  KEY `FK_holiday_policy_group_policygroup` (`policy_group_master_id`),
+  CONSTRAINT `FK_holiday_policy_group_policygroup` FOREIGN KEY (`policy_group_master_id`) REFERENCES `policy_group` (`policy_group_master_id`),
+  CONSTRAINT `FK_holiday_policy_group_holidaymaster` FOREIGN KEY (`holiday_policy_id`) REFERENCES `holiday_policy_master` (`holiday_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `holiday_policy_group` */
+
+/*Table structure for table `holiday_policy_master` */
+
+DROP TABLE IF EXISTS `holiday_policy_master`;
+
+CREATE TABLE `holiday_policy_master` (
+  `holiday_policy_id` int(10) NOT NULL AUTO_INCREMENT,
+  `holiday_master_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `minimun_employed_days` int(20) DEFAULT NULL,
+  `holiday_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `absence_policy_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`holiday_policy_id`),
+  KEY `FK_holiday_policy_master` (`absence_policy_id`),
+  CONSTRAINT `FK_holiday_policy_master` FOREIGN KEY (`absence_policy_id`) REFERENCES `absence_policy` (`absence_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `holiday_policy_master` */
+
+/*Table structure for table `mass_punch_schedule_details` */
+
+DROP TABLE IF EXISTS `mass_punch_schedule_details`;
+
+CREATE TABLE `mass_punch_schedule_details` (
+  `mass_punch_schedule_details_id` int(10) NOT NULL AUTO_INCREMENT,
+  `mass_punch_schedule_id` int(10) DEFAULT NULL,
+  `employees_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`mass_punch_schedule_details_id`),
+  KEY `FK_mass_punch_schedule_details_masspunch` (`mass_punch_schedule_id`),
+  KEY `FK_mass_punch_schedule_details_employeemaster` (`employees_id`),
+  CONSTRAINT `FK_mass_punch_schedule_details_employeemaster` FOREIGN KEY (`employees_id`) REFERENCES `employee_master` (`employee_id`),
+  CONSTRAINT `FK_mass_punch_schedule_details_masspunch` FOREIGN KEY (`mass_punch_schedule_id`) REFERENCES `mass_punch_schedule_master` (`mass_punch_schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `mass_punch_schedule_details` */
+
+/*Table structure for table `mass_punch_schedule_master` */
+
+DROP TABLE IF EXISTS `mass_punch_schedule_master`;
+
+CREATE TABLE `mass_punch_schedule_master` (
+  `mass_punch_schedule_id` int(10) NOT NULL AUTO_INCREMENT,
+  `mass_punch_schedule_status` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mass_punch_schedule_in_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mass_punch_schedule_out_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mass_punch_schedule_total_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mass_punch_schedule_start_date` date DEFAULT NULL,
+  `mass_punch_schedule_end_date` date DEFAULT NULL,
+  `sun` int(10) DEFAULT NULL,
+  `mon` int(10) DEFAULT NULL,
+  `tue` int(10) DEFAULT NULL,
+  `wed` int(10) DEFAULT NULL,
+  `thu` int(10) DEFAULT NULL,
+  `fri` int(10) DEFAULT NULL,
+  `sat` int(10) DEFAULT NULL,
+  `schedule_policy_id` int(10) DEFAULT NULL,
+  `department_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`mass_punch_schedule_id`),
+  KEY `FK_mass_punch_schedule_master_schedulepolicy` (`schedule_policy_id`),
+  KEY `FK_mass_punch_schedule_master_department` (`department_id`),
+  CONSTRAINT `FK_mass_punch_schedule_master_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `FK_mass_punch_schedule_master_schedulepolicy` FOREIGN KEY (`schedule_policy_id`) REFERENCES `schedule_policy_master` (`schedule_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `mass_punch_schedule_master` */
+
+/*Table structure for table `meal_policy` */
+
+DROP TABLE IF EXISTS `meal_policy`;
+
+CREATE TABLE `meal_policy` (
+  `mealpolicy_id` int(10) NOT NULL AUTO_INCREMENT,
+  `meal_policy_name` char(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `active_after` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `meal_time` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `minimum_punch_time` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `maximum_punch_time` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`mealpolicy_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `meal_policy` */
+
+insert  into `meal_policy`(`mealpolicy_id`,`meal_policy_name`,`active_after`,`meal_time`,`minimum_punch_time`,`maximum_punch_time`) values (4,'jigar','568','345345','42345235','20'),(6,'hjkh','2','1','4','7');
+
+/*Table structure for table `meal_policy_group` */
+
+DROP TABLE IF EXISTS `meal_policy_group`;
+
+CREATE TABLE `meal_policy_group` (
+  `meal_policy_group_id` int(10) NOT NULL AUTO_INCREMENT,
+  `meal_policy_id` int(10) DEFAULT NULL,
+  `policy_group_master_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`meal_policy_group_id`),
+  KEY `FK_meal_policy_group_mealpolicy` (`meal_policy_id`),
+  KEY `FK_meal_policy_group` (`policy_group_master_id`),
+  CONSTRAINT `FK_meal_policy_group` FOREIGN KEY (`policy_group_master_id`) REFERENCES `policy_group` (`policy_group_master_id`),
+  CONSTRAINT `FK_meal_policy_group_mealpolicy` FOREIGN KEY (`meal_policy_id`) REFERENCES `meal_policy` (`mealpolicy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `meal_policy_group` */
+
+/*Table structure for table `optiontable` */
+
+DROP TABLE IF EXISTS `optiontable`;
+
+CREATE TABLE `optiontable` (
+  `option_id` int(10) NOT NULL AUTO_INCREMENT,
+  `city` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `coumtry` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`option_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `optiontable` */
+
+insert  into `optiontable`(`option_id`,`city`,`state`,`coumtry`) values (1,NULL,'Uttar Pradesh',NULL),(2,NULL,'Maharashtra',NULL),(3,NULL,'Bihar',NULL),(4,NULL,'Poschim Bongo',NULL),(5,NULL,'Andhra Pradesh',NULL),(6,NULL,'Tamil Nadu',NULL),(7,NULL,'Madhya Pradesh',NULL),(8,NULL,'Rajasthan',NULL),(9,NULL,'Karnataka',NULL),(10,NULL,'Gujarat',NULL),(11,NULL,'Orissa',NULL),(12,NULL,'Kerala',NULL),(13,NULL,'Jharkhand',NULL),(14,NULL,'Assam',NULL),(15,NULL,'Punjab',NULL),(16,NULL,'Haryana',NULL),(17,NULL,'Chhattisgarh',NULL),(18,NULL,'Jammu and Kashm',NULL),(19,NULL,'Uttarakhand',NULL),(20,NULL,'Himachal Prades',NULL),(21,NULL,'Tripura',NULL),(22,NULL,'Meghalaya',NULL),(23,NULL,'Manipur',NULL),(24,NULL,'Nagaland',NULL),(25,NULL,'Goa',NULL),(26,NULL,'Arunachal Prade',NULL),(27,NULL,'Mizoram',NULL),(28,NULL,'Sikkim',NULL);
+
+/*Table structure for table `pay_period_employees_schedule` */
+
+DROP TABLE IF EXISTS `pay_period_employees_schedule`;
+
+CREATE TABLE `pay_period_employees_schedule` (
+  `pay_period_employee_schedule_id` int(10) NOT NULL AUTO_INCREMENT,
+  `pay_period_schedule_id` int(10) DEFAULT NULL,
+  `employee_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`pay_period_employee_schedule_id`),
+  KEY `FK_pay_period_employees_schedule_employeemaster` (`employee_id`),
+  KEY `FK_pay_period_employees_schedule_payperiodschedule` (`pay_period_schedule_id`),
+  CONSTRAINT `FK_pay_period_employees_schedule_payperiodschedule` FOREIGN KEY (`pay_period_schedule_id`) REFERENCES `pay_period_schedule` (`pay_period_schedule_id`),
+  CONSTRAINT `FK_pay_period_employees_schedule_employeemaster` FOREIGN KEY (`employee_id`) REFERENCES `employee_master` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `pay_period_employees_schedule` */
+
+/*Table structure for table `pay_period_schedule` */
+
+DROP TABLE IF EXISTS `pay_period_schedule`;
+
+CREATE TABLE `pay_period_schedule` (
+  `pay_period_schedule_id` int(10) NOT NULL AUTO_INCREMENT,
+  `pay_period_schedule_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_period_type` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `transaction_date` int(10) DEFAULT NULL,
+  `pay_periods_from` date DEFAULT NULL,
+  PRIMARY KEY (`pay_period_schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `pay_period_schedule` */
+
+/*Table structure for table `pay_stub_account` */
+
+DROP TABLE IF EXISTS `pay_stub_account`;
+
+CREATE TABLE `pay_stub_account` (
+  `pay_stub_account_id` int(10) NOT NULL AUTO_INCREMENT,
+  `pay_stub_account_status` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_stub_account_type` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_stub_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_stub_credit_account` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_stub_debit_account` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`pay_stub_account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `pay_stub_account` */
+
+/*Table structure for table `pay_stub_amendment` */
+
+DROP TABLE IF EXISTS `pay_stub_amendment`;
+
+CREATE TABLE `pay_stub_amendment` (
+  `pay_stub_amendment_id` int(10) NOT NULL AUTO_INCREMENT,
+  `employee_id` int(10) DEFAULT NULL,
+  `pay_stub_account_id` int(10) DEFAULT NULL,
+  `pay_stub_amendment_status` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pay_stub_type` int(10) DEFAULT NULL,
+  `pay_stub_percentage` float DEFAULT NULL,
+  `pay_stub_amount` double DEFAULT NULL,
+  `description` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `effective_date` date DEFAULT NULL,
+  PRIMARY KEY (`pay_stub_amendment_id`),
+  KEY `FK_pay_stub_amendment_employeemaster` (`employee_id`),
+  KEY `FK_pay_stub_amendment_paystubaccount` (`pay_stub_account_id`),
+  CONSTRAINT `FK_pay_stub_amendment_paystubaccount` FOREIGN KEY (`pay_stub_account_id`) REFERENCES `pay_stub_account` (`pay_stub_account_id`),
+  CONSTRAINT `FK_pay_stub_amendment_employeemaster` FOREIGN KEY (`employee_id`) REFERENCES `employee_master` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `pay_stub_amendment` */
+
+/*Table structure for table `policy_emp_group` */
+
+DROP TABLE IF EXISTS `policy_emp_group`;
+
+CREATE TABLE `policy_emp_group` (
+  `policy_emp_group_id` int(10) NOT NULL AUTO_INCREMENT,
+  `policy_group_master_id` int(10) DEFAULT NULL,
+  `employee_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`policy_emp_group_id`),
+  KEY `FK_policy_emp_group_policygroup` (`policy_group_master_id`),
+  KEY `FK_policy_emp_group_employeemaster` (`employee_id`),
+  CONSTRAINT `FK_policy_emp_group_employeemaster` FOREIGN KEY (`employee_id`) REFERENCES `employee_master` (`employee_id`),
+  CONSTRAINT `FK_policy_emp_group_policygroup` FOREIGN KEY (`policy_group_master_id`) REFERENCES `policy_group` (`policy_group_master_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `policy_emp_group` */
+
+/*Table structure for table `policy_group` */
+
+DROP TABLE IF EXISTS `policy_group`;
+
+CREATE TABLE `policy_group` (
+  `policy_group_master_id` int(10) NOT NULL AUTO_INCREMENT,
+  `policy_group_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`policy_group_master_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `policy_group` */
+
+insert  into `policy_group`(`policy_group_master_id`,`policy_group_name`) values (1,'Policy_Emp_Group'),(2,'Meal_Policy_Group'),(3,'Break_Policy_Group'),(4,'Exception_Policy_Group'),(5,'Holiday_Policy_Group');
+
+/*Table structure for table `reccuring_schedule_employees_details` */
+
+DROP TABLE IF EXISTS `reccuring_schedule_employees_details`;
+
+CREATE TABLE `reccuring_schedule_employees_details` (
+  `reccuring_schedule_employees_details_id` int(10) NOT NULL AUTO_INCREMENT,
+  `reccuring_schedule_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`reccuring_schedule_employees_details_id`),
+  KEY `FK_reccuring_schedule_employees_details` (`reccuring_schedule_id`),
+  CONSTRAINT `FK_reccuring_schedule_employees_details` FOREIGN KEY (`reccuring_schedule_id`) REFERENCES `reccuring_schedule_master` (`reccuring_schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `reccuring_schedule_employees_details` */
+
+/*Table structure for table `reccuring_schedule_master` */
+
+DROP TABLE IF EXISTS `reccuring_schedule_master`;
+
+CREATE TABLE `reccuring_schedule_master` (
+  `reccuring_schedule_id` int(10) NOT NULL AUTO_INCREMENT,
+  `reccuring_schedule_start_week` date DEFAULT NULL,
+  `reccuring_schedule_start_date` date DEFAULT NULL,
+  `reccuring_schedule_end_date` date DEFAULT NULL,
+  PRIMARY KEY (`reccuring_schedule_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `reccuring_schedule_master` */
+
+insert  into `reccuring_schedule_master`(`reccuring_schedule_id`,`reccuring_schedule_start_week`,`reccuring_schedule_start_date`,`reccuring_schedule_end_date`) values (1,'0000-00-00','2012-02-05',NULL);
+
+/*Table structure for table `reccuring_schedule_template` */
+
+DROP TABLE IF EXISTS `reccuring_schedule_template`;
+
+CREATE TABLE `reccuring_schedule_template` (
+  `reccuring_schedule_template_id` int(10) NOT NULL AUTO_INCREMENT,
+  `reccuring_schedule_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reccuring_schedule_desc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reccuring_schedule_week` int(10) DEFAULT NULL,
+  `sun` int(10) DEFAULT NULL,
+  `mon` int(10) DEFAULT NULL,
+  `tue` int(10) DEFAULT NULL,
+  `wed` int(10) DEFAULT NULL,
+  `thu` int(10) DEFAULT NULL,
+  `fri` int(10) DEFAULT NULL,
+  `sat` int(10) DEFAULT NULL,
+  `start_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `end_time` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `total` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `schedule_policy_id` int(10) DEFAULT NULL,
+  `department_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`reccuring_schedule_template_id`),
+  KEY `FK_reccuring_schedule_template_department` (`department_id`),
+  KEY `FK_reccuring_schedule_template_schedulepolicy` (`schedule_policy_id`),
+  CONSTRAINT `FK_reccuring_schedule_template_schedulepolicy` FOREIGN KEY (`schedule_policy_id`) REFERENCES `schedule_policy_master` (`schedule_policy_id`),
+  CONSTRAINT `FK_reccuring_schedule_template_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `reccuring_schedule_template` */
+
+/*Table structure for table `reccuring_schedule_templets_details` */
+
+DROP TABLE IF EXISTS `reccuring_schedule_templets_details`;
+
+CREATE TABLE `reccuring_schedule_templets_details` (
+  `reccuring_schedule_templets_details_id` int(10) NOT NULL AUTO_INCREMENT,
+  `reccuring_schedule_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`reccuring_schedule_templets_details_id`),
+  KEY `FK_reccuring_schedule_templets_details` (`reccuring_schedule_id`),
+  CONSTRAINT `FK_reccuring_schedule_templets_details` FOREIGN KEY (`reccuring_schedule_id`) REFERENCES `reccuring_schedule_master` (`reccuring_schedule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `reccuring_schedule_templets_details` */
+
+/*Table structure for table `recurring_holiday` */
+
+DROP TABLE IF EXISTS `recurring_holiday`;
+
+CREATE TABLE `recurring_holiday` (
+  `recurring_holiday_id` int(10) NOT NULL AUTO_INCREMENT,
+  `recurring_holiday_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `recurring_holiday_date` date DEFAULT NULL,
+  `recurring_holiday_desc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`recurring_holiday_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `recurring_holiday` */
+
+/*Table structure for table `schedule_policy_details` */
+
+DROP TABLE IF EXISTS `schedule_policy_details`;
+
+CREATE TABLE `schedule_policy_details` (
+  `schedule_policy_details_id` int(10) NOT NULL AUTO_INCREMENT,
+  `schedule_policy_id` int(10) DEFAULT NULL,
+  `break_policy_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`schedule_policy_details_id`),
+  KEY `FK_schedule_policy_details_scedulepolicy` (`schedule_policy_id`),
+  KEY `FK_schedule_policy_details_breakpolicy` (`break_policy_id`),
+  CONSTRAINT `FK_schedule_policy_details_breakpolicy` FOREIGN KEY (`break_policy_id`) REFERENCES `break_policy` (`break_policy_id`),
+  CONSTRAINT `FK_schedule_policy_details_scedulepolicy` FOREIGN KEY (`schedule_policy_id`) REFERENCES `schedule_policy_master` (`schedule_policy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `schedule_policy_details` */
+
+/*Table structure for table `schedule_policy_master` */
+
+DROP TABLE IF EXISTS `schedule_policy_master`;
+
+CREATE TABLE `schedule_policy_master` (
+  `schedule_policy_id` int(10) NOT NULL AUTO_INCREMENT,
+  `schedule_policy_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `meal_policy_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`schedule_policy_id`),
+  KEY `FK_schedule_policy_master` (`meal_policy_id`),
+  CONSTRAINT `FK_schedule_policy_master` FOREIGN KEY (`meal_policy_id`) REFERENCES `meal_policy` (`mealpolicy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `schedule_policy_master` */
+
+/*Table structure for table `tax_deduction` */
+
+DROP TABLE IF EXISTS `tax_deduction`;
+
+CREATE TABLE `tax_deduction` (
+  `tax_deduction_id` int(10) NOT NULL AUTO_INCREMENT,
+  `pay_stub_account_id` int(10) DEFAULT NULL,
+  `tax_deduction_status` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tax_deduction_type` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `calculation_type` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tax_deduction_percentage` float DEFAULT NULL,
+  `tax_deduction_amount` double DEFAULT NULL,
+  `tax_deduction_start_date` date DEFAULT NULL,
+  `tax_deduction_end_date` date DEFAULT NULL,
+  PRIMARY KEY (`tax_deduction_id`),
+  KEY `FK_tax_deduction_paystubaccount` (`pay_stub_account_id`),
+  CONSTRAINT `FK_tax_deduction_paystubaccount` FOREIGN KEY (`pay_stub_account_id`) REFERENCES `pay_stub_account` (`pay_stub_account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `tax_deduction` */
+
+/*Table structure for table `user_master` */
+
+DROP TABLE IF EXISTS `user_master`;
+
+CREATE TABLE `user_master` (
+  `usermaster_id` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `emailid` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mobileno` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `address` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pincode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` varchar(1) COLLATE utf8_unicode_ci DEFAULT '0',
+  `Is_admin` varchar(1) COLLATE utf8_unicode_ci DEFAULT '0',
+  PRIMARY KEY (`usermaster_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Data for the table `user_master` */
+
+insert  into `user_master`(`usermaster_id`,`username`,`emailid`,`password`,`mobileno`,`address`,`city`,`state`,`country`,`pincode`,`status`,`Is_admin`) values (1,'admin','','admin',NULL,NULL,NULL,NULL,NULL,NULL,'0','0'),(3,'jigar','j@gmail.com','9537882626','9537882626','','Ahmedabad',NULL,NULL,'382350','1','0'),(4,'chirag','butani@gmail.com','butani','9998277716','gh','Ahmedabad',NULL,NULL,'382350','1','0'),(5,'Hetal','h@gmail.com','patil','2542541245','sardar chawk','a\'dad',NULL,NULL,'251232','1','0'),(6,'','','','','','',NULL,NULL,'','0','0'),(7,'','','','','','','','','','1','0'),(8,'','','','','','','','','','1','0'),(9,'dsbhfdg','a@gmail.o','fhddf','564646','','1','1','2','565','0','0');
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

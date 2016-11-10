@@ -1,0 +1,44 @@
+,timestamp,rounded_time,ip_checkin,ip_checkout
+
+ //Enumeration e=NetworkInterface.getNetworkInterfaces();
+                //System.out.println("Enumeration"+e.toString());
+
+//                while(e.hasMoreElements())
+//            {
+//                NetworkInterface n=(NetworkInterface) e.nextElement();
+//                Enumeration ee = n.getInetAddresses();
+//                while(ee.hasMoreElements())
+//                {
+//                   InetAddress i= (InetAddress) ee.nextElement();
+//                    System.out.println(i.getHostAddress());
+//                    // bean.setIp_checkin(InetAddress i);
+//                }
+//
+//            }
+
+
+String ipAddress  = request.getHeader("X-FORWARDED-FOR");  
+        if(ipAddress == null)  
+        {  
+          ipAddress = request.getRemoteAddr();  
+        }  
+        System.out.println("ipAddress:"+ipAddress); 
+
+
+private void Form1_Load(object sender, EventArgs e)
+{
+    string ConString = ConfigurationManager.ConnectionStrings["ConString"].ConnectionString;
+    using (SqlConnection con = new SqlConnection(ConString))
+    {
+        SqlCommand cmd = new SqlCommand("SELECT FirstName FROM Employees", con);
+        con.Open();
+        SqlDataReader reader = cmd.ExecuteReader();
+        AutoCompleteStringCollection MyCollection = new AutoCompleteStringCollection();
+        while (reader.Read())
+        {
+            MyCollection.Add(reader.GetString(0));
+        }
+        txtFirstName.AutoCompleteCustomSource = MyCollection;
+        con.Close();
+    }
+}
